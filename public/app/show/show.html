@@ -1,0 +1,10 @@
+<!-- Display mobile -->
+<md-content hide-gt-sm layout="column" layout-fill>
+  <section ng-repeat="season in showCtrl.show().seasons" ng-include="'app/show/partials/show.html'">
+  </section>
+</md-content>
+<!-- Display desktop -->
+<md-content flex-offset="10" flex="80" hide-sm layout="column" layout-padding>
+  <section ng-repeat="season in showCtrl.show().seasons" ng-include="'app/show/partials/show.html'">
+  </section>
+</md-content>

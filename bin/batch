@@ -1,0 +1,27 @@
+#!/usr/bin/env node
+
+var DAYS_REFRESH = 7;
+
+var path = require('path');
+
+var tvshow = require(path.join(__dirname, '../lib/tvshow'));
+
+tvshow.add(80348)
+  .then(function () {
+    console.log("Done");
+    process.exit(0);
+  })
+  .catch(function (err) {
+    console.error(err);
+    process.exit(1);
+  });
+
+tvshow.update(80348)
+  .then(function () {
+    console.log("Done");
+    process.exit(0);
+  })
+  .catch(function (err) {
+    console.log(err);
+    process.exit(1);
+  });

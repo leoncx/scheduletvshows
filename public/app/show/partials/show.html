@@ -1,0 +1,25 @@
+<md-subheader class="md-primary">Season {{season.num}}</md-subheader>
+<md-list layout-padding>
+  <div ng-repeat="episode in season.episodes">
+    <md-list-item class="md-2-line">
+      <div class="md-list-item-text">
+        <h3 layout="row">
+          <div flex="10">{{episode.num}}</div>
+          <div flex>{{episode.title}}</div>
+        </h3>
+        <h4>{{episode.date | date: 'longDate'}}</h4>
+      </div>
+      <md-button class="md-icon-button" aria-label="Switch to view">
+        <md-icon 
+          class="material-icons md-warn"
+          ng-click="showCtrl.watch(season.num, episode)"
+          ng-if="!episode.view">visibility_off</md-icon>
+        <md-icon
+          class="material-icons md-primary"
+          ng-click="showCtrl.unwatch(season.num, episode)"
+          ng-if="episode.view">visibility_on</md-icon>
+      </md-button>
+    </md-list-item>
+    <md-divider ng-if="!$last"></md-divider>
+  </div>
+</md-list>

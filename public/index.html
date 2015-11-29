@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="stsApp">
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="Schedule Tv Shows">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ScheduleTvShows</title>
+  
+  <!-- Android theme color -->
+  <meta name="theme-color" content="#ff8a65">
+  
+  <!-- Win8 theme color -->
+  <meta name="msapplication-TileColor" content="#ff8a65">
+  
+  <link rel="stylesheet" href="vendors/angular-material/angular-material.min.css">
+  <link rel="stylesheet" href="vendors/angular-material-icons/angular-material-icons.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="vendors/nvd3/build/nv.d3.min.css">
+  <link rel="stylesheet" href="vendors/angular-loading-bar/build/loading-bar.min.css">
+  
+  <link rel="stylesheet" href="stylesheet/main.css">
+  
+  <base href="/">
+</head>
+<body layout="row" flex>
+  <!-- Sidenav for filters -->
+  <md-sidenav md-component-id="filters" class="md-sidenav-left md-whiteframe-z2">
+    <md-toolbar layout-padding>
+      <h4><span>Filters</span></h4>
+    </md-toolbar>
+    <md-content flex layout-padding>
+      <div layout="column" ng-controller="FilterCtrl as filterCtrl">
+        <!-- Sort -->
+        <div layout="row">
+          <md-input-container flex>
+            <label>Order by</label>
+            <md-select ng-model="filterCtrl.filters.orderby">
+              <md-option value="tosee">Episodes to watch</md-option>
+              <md-option value="nextairdate">Next episode</md-option>
+              <md-option value="name">Title</md-option>
+            </md-select>
+          </md-input-container>
+          <md-button class="md-icon-button" ng-click="filterCtrl.filters.reverse=!filterCtrl.filters.reverse" aria-label="Sort order">
+            <ng-md-icon icon="sort"></ng-md-icon>
+          </md-button>
+        </div>
+        <!-- Filter by genre -->
+        <md-input-container flex>
+          <label>Genre</label>
+          <md-select ng-model="filterCtrl.filters.search.genres">
+            <md-option value=""></md-option>
+            <md-option ng-repeat="genre in filterCtrl.genres" value="{{genre}}">{{genre}}</md-option>
+          </md-select>
+        </md-input-container>
+        <h5>Display :</h5>
+        <!-- Display shows ended -->
+        <md-switch ng-model="filterCtrl.filters.search.ended" ng-true-value="''" ng-false-value="'0'">
+          Shows ended
+        </md-switch>
+        <!-- Display shows with not episode to see -->
+        <md-switch ng-model="filterCtrl.filters.search.uptodate" ng-true-value="''" ng-false-value="'0'">
+          Shows finish to see
+        </md-switch>
+      </div>
+    </md-content>
+  </md-sidenav>
+  
+  <!-- Content -->
+  <md-content layout="column" layout-fill flex ng-cloak>
+    <md-toolbar ng-controller="HeaderCtrl as headerCtrl" ng-show="!headerCtrl.showSearch()" class="md-whiteframe-2dp">
+      <md-button class="md-fab btn-add" aria-label="Add" ng-if="headerCtrl.isAuthenticated()" ng-click="headerCtrl.addShow()">
+        <md-icon class="material-icons">add</md-icon>
+      </md-button>
+      <div class="md-toolbar-tools">
+        <md-button class="md-icon-button" aria-label="Filters" ng-click="headerCtrl.toggleFilters()">
+          <md-icon class="material-icons">menu</md-icon>
+        </md-button>
+        <h2>
+          <span><a ng-href="/">ScheduleTvShows</a></span>
+        </h2>
+        <span flex></span>
+        <md-button class="md-icon-button" aria-label="Search" ng-click="headerCtrl.toggleSearch()">
+          <md-icon class="material-icons">search</md-icon>
+        </md-button>
+        <md-menu md-position-mode="target-right target">
+          <md-button class="md-icon-button" aria-label="Menu" ng-click="$mdOpenMenu($event)">
+            <md-icon class="material-icons">more_vert</md-icon>
+          </md-button>
+          <!-- Menu -->
+          <md-menu-content width="2">
+            <md-menu-item ng-if="!headerCtrl.isAuthenticated()">
+              <md-button ng-href="/signin">
+                Sign in
+              </md-button>
+            </md-menu-item>
+            <md-menu-item ng-if="headerCtrl.isAuthenticated()">
+              <md-button ng-href="/profile">
+                Profile
+              </md-button>
+            </md-menu-item>
+            <md-menu-item ng-if="headerCtrl.isAuthenticated()">
+              <md-button ng-click="headerCtrl.signout()">
+                Sign out
+              </md-button>
+            </md-menu-item>
+            <md-menu-divider></md-menu-divider>
+            <md-menu-item>
+              <md-button ng-href="/about">
+                About
+              </md-button>
+            </md-menu-item>
+          </md-menu-content>
+        </md-menu>
+      </div>
+      <div ng-show="headerCtrl.displayTabs()">
+        <!-- Tabs for navigation -->
+        <md-tabs md-center-tabs md-selected="headerCtrl.tabSelected" class="md-primary" ng-if="headerCtrl.tabSelected != -2">
+          <md-tab id="tvshow" ng-if="headerCtrl.isAuthenticated()" md-on-select="headerCtrl.go('show')">
+            Your TV Shows
+          </md-tab>
+          <md-tab id="proposed" md-on-select="headerCtrl.go('proposed')">
+            Proposed shows
+          </md-tab>
+          <md-tab id="tonight" ng-if="headerCtrl.isAuthenticated()" md-on-select="headerCtrl.go('tonight')">
+            To night
+          </md-tab>
+        </md-tabs>
+        <!-- Title of show when display the list of episodes -->
+        <div layout="row" class="md-toolbar-tools" ng-if="headerCtrl.tabSelected == -2">
+          <md-button class="md-icon-button" aria-label="Back" ng-click="headerCtrl.back()">
+            <md-icon class="material-icons">arrow_back</md-icon>
+          </md-button>
+          <h2 flex layout="row" layout-align="center center">
+            <span ng-bind="headerCtrl.$shows.getCurrentTitle()"></span>
+          </h2>
+        </div>
+      </div>
+    </md-toolbar>
+    <!-- Search toolbar -->
+    <md-toolbar class="md-hue-1 md-whiteframe-2dp" ng-controller="SearchCtrl as searchCtrl" ng-show="searchCtrl.showSearch()">
+      <div class="md-toolbar-tools">
+        <md-button ng-click="searchCtrl.toggleSearch()" class="md-icon-button" aria-label="Back">
+          <md-icon class="material-icons">arrow_back</md-icon>
+        </md-button>
+        <md-input-container md-theme="input" flex>
+          <label>&nbsp;</label>
+          <input ng-model="searchCtrl.filters.search.name" placeholder="Search TV Show">
+        </md-input-container>
+      </div>
+    </md-toolbar>
+    
+    <!-- Content -->
+    <md-content flex ng-view>
+    </md-content>
+  </md-content>
+  
+  <!-- Vendor libs -->
+  <script src="vendors/angular/angular.min.js"></script>
+  <script src="vendors/angular-messages/angular-messages.min.js"></script>
+  <script src="vendors/angular-animate/angular-animate.min.js"></script>
+  <script src="vendors/angular-route/angular-route.min.js"></script>
+  <script src="vendors/angular-aria/angular-aria.min.js"></script>
+  <script src="vendors/angular-material/angular-material.min.js"></script>
+  <script src="vendors/angular-material-icons/angular-material-icons.min.js"></script>
+  <script src="vendors/satellizer/satellizer.min.js"></script>
+  <script src="vendors/angularjs-gravatardirective/dist/angularjs-gravatardirective.min.js"></script>
+  <script src="vendors/svg-morpheus/compile/minified/svg-morpheus.js"></script>
+  <script src="vendors/d3/d3.min.js"></script>
+  <script src="vendors/nvd3/build/nv.d3.min.js"></script>
+  <script src="vendors/angular-nvd3/dist/angular-nvd3.min.js"></script>
+  <script src="vendors/angular-loading-bar/build/loading-bar.min.js"></script>
+  <script src="vendors/angulartics/dist/angulartics.min.js"></script>
+  <script src="vendors/angulartics-google-analytics/dist/angulartics-google-analytics.min.js"></script>
+
+  <!-- Application -->
+  <script src="app/lib/functions.js"></script>
+  <script src="app/directive/match.js"></script>
+  <script src="app/search/module.js"></script>
+  <script src="app/header/module.js"></script>
+  <script src="app/user/module.js"></script>
+  <script src="app/show/module.js"></script>
+  <script src="app/home/module.js"></script>
+
+  <!-- Load application -->
+  <script src="app/app.js"></script>
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-XXXXXXXX-X', 'none');
+  </script>
+</body>
+</html>

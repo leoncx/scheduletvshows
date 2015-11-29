@@ -1,0 +1,23 @@
+<md-bottom-sheet class="md-list md-has-header" ng-cloak>
+  <md-subheader>
+    <form layout="row" ng-submit="addShowCtrl.search()">
+      <md-input-container flex md-no-float>
+        <input type="text" placeholder="Search TV show" ng-model="addShowCtrl.searchStr">
+      </md-input-container>
+      <md-button class="md-icon-button" type="submit">
+        <md-icon class="material-icons">search</md-icon>
+      </md-button>
+    </form>
+  </md-subheader>
+  <md-list>
+    <md-list-item ng-repeat="show in addShowCtrl.shows" layout="row">
+      <span class="md-inline-list-icon-label" flex>{{ show.name }}</span>
+      <md-button class="md-icon-button" ng-href="{{ show.link }}" target="blank">
+        <md-icon class="material-icons">local_movies</md-icon>
+      </md-button>
+      <md-button class="md-raised md-primary" aria-label="Add {{show.name}}" ng-class="{'md-primary': !show.subcribed, 'md-warn': show.subcribed}" ng-click="addShowCtrl.toggleSubcription(show)">
+        <ng-md-icon icon="{{ show.icon }}"></ng-md-icon>
+      </md-button>
+    </md-list-item>
+  </md-list>
+</md-bottom-sheet>

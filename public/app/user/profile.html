@@ -1,0 +1,45 @@
+<md-content class="md-whiteframe-1dp md-caption"
+            hide-gt-sm
+            layout-padding
+            ng-class="{'app-error': profileCtrl.error, 'app-success': profileCtrl.success}"
+            ng-show="profileCtrl.error || profileCtrl.success"
+            ng-bind="profileCtrl.error + profileCtrl.success">
+</md-content>
+<md-content hide-gt-sm layout="column" layout-padding layout-align="space-around center" class="signin" ng-include="'app/user/form/profile.html'">
+</md-content>
+<div hide-sm layout="row" layout-padding layout-wrap>
+  <md-whiteframe flex="80" flex-offset="10" layout="column" class="signin md-whiteframe-1dp">
+    <md-toolbar layout="row" layout-align="center center">
+      Profile
+    </md-toolbar>
+    <md-content class="md-whiteframe-1dp md-caption"
+            layout-padding
+            ng-class="{'app-error': profileCtrl.error, 'app-success': profileCtrl.success}"
+            ng-show="profileCtrl.error || profileCtrl.success"
+            ng-bind="profileCtrl.error + profileCtrl.success">
+    </md-content>
+    <div layout="column" layout-padding layout-align="space-around center" ng-include="'app/user/form/profile.html'"></div>
+  </md-whiteframe>
+  <div flex></div>
+  <!-- Statistics chart -->
+  <md-whiteframe flex="80" flex-offset="10" layout="column" class="signin md-whiteframe-1dp">
+    <md-toolbar layout="row" layout-align="center center">
+      Statistics
+    </md-toolbar>
+    <div layout="row" layout-padding layout-wrap>
+      <div flex="50">
+        <h4>Watched episodes</h4>
+        <nvd3 options="profileCtrl.chart.watched" data="profileCtrl.data.watched" config="profileCtrl.configChart"></nvd3>
+      </div>
+      <div flex="50">
+        <h4>TV Shows ended</h4>
+        <nvd3 options="profileCtrl.chart.ended" data="profileCtrl.data.ended" config="profileCtrl.configChart"></nvd3>
+      </div>
+      <div flex>
+        <h4>Genres</h4>
+        <nvd3 options="profileCtrl.chart.genres" data="profileCtrl.data.genres" config="profileCtrl.configChart"></nvd3>
+      </div>
+    </div>
+  </md-whiteframe>
+  <div flex></div>
+</div>

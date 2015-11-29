@@ -1,0 +1,14 @@
+<md-content class="md-whiteframe-1dp app-error md-caption" hide-gt-sm layout-padding ng-show="signinCtrl.error" ng-bind="signinCtrl.error">
+</md-content>
+<md-content hide-gt-sm layout="column" layout-padding layout-align="space-around center" class="signin" ng-include="'app/user/form/signin.html'">
+</md-content>
+<div hide-sm layout="row">
+  <md-whiteframe flex="25" flex-offset="40" layout="column" class="signin md-whiteframe-1dp">
+    <md-toolbar layout="row" layout-align="center center">
+      Sign in
+    </md-toolbar>
+    <md-content class="md-whiteframe-1dp md-caption app-error" layout-padding ng-show="signinCtrl.error" ng-bind="signinCtrl.error">
+    </md-content>
+    <div layout="column" layout-padding layout-align="space-around center" ng-include="'app/user/form/signin.html'"></div>
+  </md-whiteframe>
+</div>

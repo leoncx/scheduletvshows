@@ -1,0 +1,20 @@
+<md-content class="validate md-whiteframe-1dp md-caption"
+            hide-gt-sm
+            layout-padding
+            ng-class="{'app-error': validateCtrl.error, 'app-success': validateCtrl.success}"
+            ng-show="validateCtrl.error || validateCtrl.success"
+            ng-bind="validateCtrl.error + validateCtrl.success">
+</md-content>
+<div hide-sm layout="row">
+  <md-whiteframe flex="33" flex-offset="33" layout="column" class="validate md-whiteframe-1dp">
+    <md-toolbar layout="row" layout-align="center center">
+      Validate your sign up
+    </md-toolbar>
+    <md-content class="md-whiteframe-1dp md-caption"
+                layout-padding
+                ng-class="{'app-error': validateCtrl.error, 'app-success': validateCtrl.success}"
+                ng-show="validateCtrl.error || validateCtrl.success"
+                ng-bind="validateCtrl.error + validateCtrl.success">
+    </md-content>
+  </md-whiteframe>
+</div>

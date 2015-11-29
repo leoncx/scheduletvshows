@@ -1,0 +1,36 @@
+<form layout="column" name="signupCtrl.signupForm" layout-align="start start" ng-submit="signupCtrl.signup()" novalidate>
+  <md-input-container class="md-icon-float">
+    <label>Email</label>
+    <md-icon class="material-icons">person</md-icon>
+    <input type="email" ng-model="signupCtrl.user.email" name="email" required>
+    <div ng-messages="signupCtrl.signupForm.email.$error" ng-if="signupCtrl.signupForm.email.$touched">
+      <div ng-message="required">Your email is required.</div>
+      <div ng-message="email">Your email is not a valid email.</div>
+      <div ng-message="unique">Your email is already registred.</div>
+    </div>
+  </md-input-container>
+  <md-input-container class="md-icon-float">
+    <label>Password</label>
+    <md-icon class="material-icons">lock</md-icon>
+    <input type="password" ng-model="signupCtrl.user.password" name="password" required>
+    <div ng-messages="signupCtrl.signupForm.password.$error" ng-if="signupCtrl.signupForm.password.$touched">
+      <div ng-message="required">A password is required.</div>
+    </div>
+  </md-input-container>
+  <md-input-container class="md-icon-float">
+    <label>Confirm password</label>
+    <md-icon class="material-icons">lock</md-icon>
+    <input type="password" ng-model="signupCtrl.user.confirm" name="confirm" match="signupCtrl.user.password">
+    <div ng-messages="signupCtrl.signupForm.confirm.$error" ng-if="signupCtrl.signupForm.confirm.$touched">
+      <div ng-message="match">The confirm password doesn't match.</div>
+    </div>
+  </md-input-container>
+  <div layout="row" layout-align="end start" class="btn-tools">
+    <md-button type="reset" ng-click="signupCtrl.reset()">
+      Reset
+    </md-button>
+    <md-button class="md-primary" type="submit">
+      Sign up
+    </md-button>
+  </div>
+</form>

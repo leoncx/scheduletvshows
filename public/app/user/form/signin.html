@@ -1,0 +1,24 @@
+<div class="gravatar">
+  <gravatar-image data-gravatar-email="signinCtrl.user.email"
+                  data-gravatar-size="200"
+                  data-gravatar-default="mm"
+                  data-gravatar-secure="true"></gravatar-image>
+</div>
+<form layout="column" name="signinCtrl.signinForm" layout-align="space-around center" ng-submit="signinCtrl.signin()" novalidate>
+  <md-input-container class="md-icon-float">
+    <label>Email</label>
+    <md-icon class="material-icons">person</md-icon>
+    <input type="email" ng-model="signinCtrl.user.email" required>
+  </md-input-container>
+  <md-input-container class="md-icon-float">
+    <label>Password</label>
+    <md-icon class="material-icons">lock</md-icon>
+    <input type="password" ng-model="signinCtrl.user.password" required>
+  </md-input-container>
+  <md-button type="submit" class="md-raised md-primary">
+    Sign in
+  </md-button>
+</form>
+<div class="md-caption">
+  Don't have an account ? <a ng-href="/signup">Sign up</a>
+</div>

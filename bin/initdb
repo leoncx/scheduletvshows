@@ -1,0 +1,24 @@
+#!/usr/bin/env node
+
+var args = process.argv.slice(2);
+var models = require("../models");
+
+if (args.length != 1) {
+  console.error("Bad arguments.");
+  process.exit(1);
+}
+
+if (args[0] == "migrate") {
+  console.log("Initialize schema.");
+  models.sequelize.sync()
+    .then(function () {
+      console.log("Database initialized.");
+    })
+    .catch(function (err) {
+      console.error("Problem to initialize database.");
+      process.exit(1);
+    });
+} else {
+  console.error("Bad arguments.");
+  process.exit(1);
+}

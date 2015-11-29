@@ -1,0 +1,8 @@
+<md-content hide-sm layout="row" layout-margin layout-wrap flex layout-align="space-around start">
+  <md-card flex="20" ng-include="'app/show/partials/shows-gt-sm.html'" ng-repeat="show in showsCtrl.getShows()" ng-if="show.display"></md-card>
+</md-content>
+<md-content hide-gt-sm layout="column" layout-fill>
+  <md-list class="list-shows">
+    <md-list-item ng-include="'app/show/partials/shows-sm.html'" ng-repeat="show in showsCtrl.getShows()" ng-if="show.display"></md-list-item>
+  </md-list>
+</md-content>

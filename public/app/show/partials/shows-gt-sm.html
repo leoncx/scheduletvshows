@@ -1,0 +1,68 @@
+<div ng-style="{'background-image': 'url(http://thetvdb.com/banners/{{show.img}})'}" class="md-card-image" ng-cloak></div>
+<md-card-content>
+  <h2 class="title" ng-if="!show.subcribe"><a ng-href="/show/{{show.slug}}">{{show.name}}</a></h2>
+  <h2 class="title" ng-if="show.subcribe">{{show.name}}</h2>
+  <md-content layout="row">
+    <md-content class="box-genres" flex="40" layout="column" layout-padding>
+      <md-virtual-repeat-container class="genres">
+        <div md-virtual-repeat="genre in show.genres" flex class="genre">
+          {{genre}}
+        </div>
+      </md-virtual-repeat-container>
+    </md-content>
+    <md-content class="extend" flex="60" layout="column" layout-padding>
+      <div layout="row">
+        <span flex></span>
+        <md-icon class="material-icons" ng-if="!show.ended" aria-label="In diffusion">
+          <md-tooltip md-direction="top">In diffusion</md-tooltip>
+          videocam
+        </md-icon>
+        <md-icon class="material-icons" ng-if="show.ended" aria-label="Ended">
+          <md-tooltip md-direction="top">Ended</md-tooltip>
+          videocam_off
+        </md-icon>
+      </div>
+      <div layout="row" ng-if="show.nextep">
+        <span flex>Next episode</span>
+        <span>{{show.nextep}}</span>
+      </div>
+      <div layout="row" ng-if="show.nextep">
+        <span flex></span>
+        <span>{{show.nextairdate}}</span>
+      </div>
+      <div layout="row" ng-if="show.tosee">
+        <span flex>To watch</span>
+        <span>{{show.tosee}}</span>
+      </div>
+    </md-content>
+  </md-content>
+  <div class="md-actions" layout="row" layout-align="end center" ng-if="showsCtrl.isAuthenticated()">
+    <md-button class="md-icon-button md-primary" ng-click="showsCtrl.next(show)" ng-if="!show.subcribe && show.tosee">
+      <md-tooltip>Next episode watched</md-tooltip>
+      <md-icon class="material-icons">play_circle_filled</md-icon>
+    </md-button>
+    <md-button class="md-icon-button md-primary" ng-if="showsCtrl.isAuthenticated() && show.subcribe" ng-click="showsCtrl.subcribe(show)">
+      <md-tooltip>Subcribe</md-tooltip>
+      <md-icon class="material-icons">playlist_add</md-icon>
+    </md-button>
+    <md-menu md-position-mode="target-right target" ng-if="!show.subcribe">
+      <md-button class="md-icon-button" aria-label="Menu show" ng-click="$mdOpenMenu($event)">
+        <md-icon class="material-icons">more_vert</md-icon>
+      </md-button>
+      <md-menu-content width="2">
+        <md-menu-item ng-if="show.tosee">
+          <md-button class="md-primary" ng-click="showsCtrl.next(show)">
+            <md-icon class="material-icons">play_circle_filled</md-icon>
+            Next episode watched
+          </md-button>
+        </md-menu-item>
+        <md-menu-item>
+          <md-button class="md-warn" ng-click="showsCtrl.unsubcribe(show)">
+            <md-icon class="material-icons">remove_circle_outline</md-icon>
+            Unsubcribe
+          </md-button>
+        </md-menu-item>
+      </md-menu-content>
+    </md-menu>
+  </div>
+</md-card-content>

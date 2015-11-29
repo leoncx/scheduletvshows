@@ -1,0 +1,23 @@
+<md-content class="md-whiteframe-1dp md-caption"
+            hide-gt-sm
+            layout-padding
+            ng-class="{'app-error': signupCtrl.error, 'app-success': signupCtrl.success}"
+            ng-show="signupCtrl.error || signupCtrl.success"
+            ng-bind="signupCtrl.error + signupCtrl.success">
+</md-content>
+<md-content hide-gt-sm layout="column" layout-padding layout-align="space-around center" class="signup" ng-include="'app/user/form/signup.html'">
+</md-content>
+<div hide-sm layout="row">
+  <md-whiteframe flex="33" flex-offset="33" layout="column" class="signup md-whiteframe-1dp">
+    <md-toolbar layout="row" layout-align="center center">
+      Sign up
+    </md-toolbar>
+    <md-content class="md-whiteframe-1dp md-caption"
+                layout-padding
+                ng-class="{'app-error': signupCtrl.error, 'app-success': signupCtrl.success}"
+                ng-show="signupCtrl.error || signupCtrl.success"
+                ng-bind="signupCtrl.error + signupCtrl.success">
+    </md-content>
+    <div layout="column" layout-padding layout-align="space-around center" ng-include="'app/user/form/signup.html'"></div>
+  </md-whiteframe>
+</div>

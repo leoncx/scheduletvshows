@@ -1,0 +1,32 @@
+<div flex layout="row">
+  <div ng-style="{'background-image': 'url(http://thetvdb.com/banners/{{show.img}})'}" class="banner"></div>
+  <div layout="column" flex class="info">
+    <div class="title" layout="row">
+      <a flex class="title" ng-href="/show/{{show.slug}}" ng-if="!show.subcribe">{{show.name}}</a>
+      <span flex class="title" ng-if="show.subcribe">{{show.name}}</span>
+      <span class="badge" ng-if="show.tosee">
+        {{show.tosee}}
+      </span>
+      <md-icon class="material-icons" ng-if="!show.ended" aria-label="In diffusion">
+        videocam
+      </md-icon>
+      <md-icon class="material-icons" ng-if="show.ended" aria-label="Ended">
+        videocam_off
+      </md-icon>
+    </div>
+    <div class="actions" layout="row">
+      <span flex class="next" ng-if="show.nextep">Next : {{show.nextep}} {{show.nextairdate}}</span>
+      <span flex ng-if="!show.nextep"></span>
+      <md-button class="md-icon-button btn-compact md-primary" ng-click="showsCtrl.next(show)" ng-if="!show.subcribe && show.tosee">
+        <md-icon class="material-icons">play_circle_filled</md-icon>
+      </md-button>
+      <md-button class="md-icon-button btn-compact md-primary" ng-if="showsCtrl.isAuthenticated() && show.subcribe" ng-click="showsCtrl.subcribe(show)">
+        <md-icon class="material-icons">playlist_add</md-icon>
+      </md-button>
+      <md-button class="md-icon-button btn-compact md-warn" ng-if="!show.subcribe" ng-click="showsCtrl.unsubcribe(show)">
+        <md-icon class="material-icons">remove_circle_outline</md-icon>
+      </md-button>
+    </div>
+  </div>
+</div>
+<md-divider ng-if="!$last"></md-divider>

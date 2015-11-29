@@ -1,0 +1,26 @@
+<form layout-gt-sm="row" layout-sm="column" name="profileCtrl.profileForm" layout-align="space-around center" novalidate ng-submit="profileCtrl.save()">
+  <md-input-container class="md-icon-float">
+    <label>Password</label>
+    <md-icon class="material-icons">lock</md-icon>
+    <input type="password" ng-model="profileCtrl.user.password" name="password" required>
+    <div ng-messages="profileCtrl.profileForm.password.$error" ng-if="profileCtrl.profileForm.password.$touched">
+      <div ng-message="required">A password is required.</div>
+    </div>
+  </md-input-container>
+  <md-input-container class="md-icon-float">
+    <label>Confirm password</label>
+    <md-icon class="material-icons">lock</md-icon>
+    <input type="password" ng-model="profileCtrl.user.confirm" name="confirm" match="profileCtrl.user.password">
+    <div ng-messages="profileCtrl.profileForm.confirm.$error" ng-if="profileCtrl.profileForm.confirm.$touched">
+      <div ng-message="match">The confirm password doesn't match.</div>
+    </div>
+  </md-input-container>
+  <div layout="row" layout-align="end start" class="btn-tools">
+    <md-button type="reset" ng-click="profileCtrl.reset()">
+      Reset
+    </md-button>
+    <md-button class="md-primary" type="submit">
+      Save
+    </md-button>
+  </div>
+</form>
