@@ -50,6 +50,12 @@
         <md-icon class="material-icons">more_vert</md-icon>
       </md-button>
       <md-menu-content width="2">
+        <md-menu-item ng-if="show.imdb_tt">
+          <md-button class="md-primary" ng-href="http://www.imdb.com/title/{{ show.imdb_tt }}" target="blank">
+            <md-icon class="material-icons">local_movies</md-icon>
+            IMDB
+          </md-button>
+        </md-menu-item>
         <md-menu-item ng-if="show.tosee">
           <md-button class="md-primary" ng-click="showsCtrl.next(show)">
             <md-icon class="material-icons">play_circle_filled</md-icon>

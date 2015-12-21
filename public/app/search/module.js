@@ -45,7 +45,6 @@ searchModule
           function () {
             var $search = {};
             $search.showSearch = false;
-            $search.searchText = '';
             
             /**
              * Get if the search bar must be  display
