@@ -237,7 +237,8 @@ router.get('/',
       .query(
         'SELECT s.id, s.name, s.slug, s.image, s.ended, s.imdb_id, ' +
           'e.season, e.episode, e.date, g.name as genre, ' +
-          '(SELECT COUNT(*) FROM Episodes WHERE ShowId = s.id) as showep, ' +
+          '(SELECT COUNT(*) FROM Episodes WHERE ShowId = s.id ' +
+          'AND `date` < NOW()) as showep, ' +
           '(SELECT COUNT(*) ' +
           'FROM UserEpisodes ' +
           'WHERE ShowId = s.id AND UserId = us.UserId) as userep ' +
