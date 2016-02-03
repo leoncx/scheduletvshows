@@ -132,7 +132,12 @@ headerModule
         'use strict';
         this.filters = $filters;
         this.showSearch = $searchService.displaySearch;
-        this.toggleSearch = $searchService.toggleSearch;
+        this.toggleSearch = function () {
+          if ($searchService.displaySearch()) {
+            this.filters.search.name = '';
+          }
+          $searchService.toggleSearch();
+        };
       }
     ]
   );
