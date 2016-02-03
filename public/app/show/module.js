@@ -291,7 +291,6 @@ showModule
         self.search = function () {
           $shows.search(self.searchStr)
             .then(function (data) {
-              
               self.shows = data.data.map(function (show) {
                 if (show.subcribed) {
                   show.icon = 'remove_circle_outline';
@@ -301,7 +300,16 @@ showModule
                 return show;
               });
             })
-            .catch(function (data) {
+            .catch(function (err) {
+              self.shows = [];
+              if (err.status === 404) {
+                $mdToast.show(
+                  $mdToast.simple()
+                    .content('No TV Shows found')
+                    .position('top right')
+                    .hideDelay(2000)
+                );
+              }
             });
         };
         
