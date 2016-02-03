@@ -1,27 +1,45 @@
 #!/usr/bin/env node
 
 var DAYS_REFRESH = 7;
+var LIMIT_REFRESH = 10;
 
 var path = require('path');
+var moment = require('moment');
 
 var tvshow = require(path.join(__dirname, '../lib/tvshow'));
+var models = require('../models');
 
-tvshow.add(80348)
-  .then(function () {
-    console.log("Done");
-    process.exit(0);
+models.Show
+  .findAll({
+    attributes: ['id', 'name'],
+    where: {
+      last_update: {
+        $lte: moment().subtract(DAYS_REFRESH, 'days').toDate()
+      }
+    },
+    limit: LIMIT_REFRESH
+  })
+  .then(function (tvshows) {
+    'use strict';
+    var i = 0;
+    var toUpdate = [];
+    
+    for (i; i < tvshows.length; i++) {
+      console.log('Update : ' + tvshows[i].name);
+      toUpdate.push(tvshow.update(tvshows[i].id));
+    }
+    Promise.all(toUpdate)
+      .then(function () {
+        console.log('Update finished.')
+        process.exit(0);
+      })
+      .catch(function (err) {
+        console.error(err);
+        process.exit(1);
+      });
   })
   .catch(function (err) {
+    'use strict';
     console.error(err);
     process.exit(1);
-  });
-
-tvshow.update(80348)
-  .then(function () {
-    console.log("Done");
-    process.exit(0);
   })
-  .catch(function (err) {
-    console.log(err);
-    process.exit(1);
-  });
