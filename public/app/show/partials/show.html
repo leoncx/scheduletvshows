@@ -5,7 +5,7 @@
       <div class="md-list-item-text">
         <h3 layout="row">
           <div flex="10">{{episode.num}}</div>
-          <div flex>{{episode.title}}</div>
+          <div flex ng-class="{'title-tba': episode.title == 'TBA'}">{{episode.title}}</div>
         </h3>
         <h4>{{episode.date | date: 'longDate'}}</h4>
       </div>
