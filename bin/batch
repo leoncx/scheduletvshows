@@ -15,7 +15,8 @@ models.Show
     where: {
       last_update: {
         $lte: moment().subtract(DAYS_REFRESH, 'days').toDate()
-      }
+      },
+      ended: false
     },
     limit: LIMIT_REFRESH
   })
