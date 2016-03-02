@@ -1,5 +1,5 @@
 <div flex layout="row">
-  <div ng-style="{'background-image': 'url(https://thetvdb.com/banners/{{show.img}})'}" class="banner"></div>
+  <div ng-style="{'background-image': 'url(/banners/{{show.img|basename}})'}" class="banner"></div>
   <div layout="column" flex class="info">
     <div class="title" layout="row">
       <a flex class="title" ng-href="/show/{{show.slug}}" ng-if="!show.subcribe">{{show.name}}</a>

@@ -7,7 +7,8 @@ showModule
   .config(
     [
       '$routeProvider',
-      function ($routeProvider) {
+      '$filterProvider',
+      function ($routeProvider, $filterProvider) {
         'use strict';
         $routeProvider
           .when('/show', {
@@ -29,6 +30,11 @@ showModule
             controller: 'ShowCtrl as showCtrl',
             auth: true
           });
+        $filterProvider.register('basename', function () {
+          return function (url) {
+            return ((url=/(([^\/\\\.#\? ]+)(\.\w+)*)([?#].+)?$/.exec(url))!= null)? url[1]: '';
+          };
+        });
       }
     ]
   )
