@@ -1,11 +1,7 @@
-/*jslint node: true */
-
-var fs = require('fs');
 var express = require('express');
 var session = require('express-session');
 var path = require('path');
 var csrf = require('csurf');
-var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
@@ -20,11 +16,9 @@ config.mail.templatesDir = path.join(__dirname, 'mails');
 
 mailer.extend(app, config.mail);
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 
 /* Init session */
@@ -42,7 +36,7 @@ app.use(function (err, req, res, next) {
   if (err.code !== 'EBADCSRFTOKEN') {
     next(err);
   }
-  
+
   res.status(403).send('Session token expired');
 });
 
@@ -73,9 +67,9 @@ routerApi.use('*', function (req, res, next) {
 
 app.use('/api', routerApi);
 
-app.use('*', function (req, res, next) {
+app.use('*', function (req, res) {
   'use static';
-  res.sendFile(__dirname + '/public/index.html');
+  res.sendFile(path.join(__dirname, '/public/index.html'));
 });
 
 // catch 404 and forward to error handler
