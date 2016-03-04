@@ -1,8 +1,3 @@
-/*jslint node:true*/
-if (!Promise) {
-  var Promise = require('bluebird');
-}
-
 var moment = require('moment');
 var express = require('express');
 var config = require('../config');
@@ -31,10 +26,12 @@ router.post(
             user
               .getShows()
               .then(function (userShows) {
-                var subcribed, i = 0, j = 0;
-                for (i = 0; i < response.length; i = i + 1) {
+                var subcribed;
+                var i = 0;
+                var j = 0;
+                for (i = 0; i < response.length; i++) {
                   subcribed = false;
-                  for (j = 0; j < userShows.length; j = j + 1) {
+                  for (j = 0; j < userShows.length; j++) {
                     if (userShows[j].id === response[i].seriesid) {
                       subcribed = true;
                       break;
@@ -70,9 +67,10 @@ router.post(
 
 router.get('/proposed', function (req, res) {
   'use strict';
-  var proposedQuery, subProposedQuery,
-    subOrder = 'ORDER BY RAND() LIMIT 3',
-    user = authMiddleware.getUser(req);
+  var proposedQuery;
+  var subProposedQuery;
+  var subOrder = 'ORDER BY RAND() LIMIT 3';
+  var user = authMiddleware.getUser(req);
 
   subProposedQuery =
     'SELECT s.id, s.name, s.slug, s.image, s.imdb_id, s.ended FROM Shows s';
@@ -88,11 +86,13 @@ router.get('/proposed', function (req, res) {
     ') as sf, Genres g, ShowGenre sg ' +
     'WHERE sf.id = sg.ShowId AND g.id = sg.GenreId';
   models.sequelize
-    .query(proposedQuery, { type: models.sequelize.QueryTypes.SELECT })
+    .query(proposedQuery, {type: models.sequelize.QueryTypes.SELECT})
     .then(function (shows) {
-      var showsPromise, finalShows = {}, i = 0;
-      for (i = 0; i < shows.length; i = i + 1) {
-        if (false === finalShows.hasOwnProperty(shows[i].slug)) {
+      var showsPromise;
+      var finalShows = {};
+      var i = 0;
+      for (i = 0; i < shows.length; i++) {
+        if (finalShows.hasOwnProperty(shows[i].slug) === false) {
           finalShows[shows[i].slug] = {
             id: shows[i].id,
             name: shows[i].name,
@@ -127,14 +127,15 @@ router.get('/proposed', function (req, res) {
                 'WHERE ShowId = ' + show.id + ' AND season = ' +
                 '(SELECT MAX(season) ' +
                 'FROM Episodes WHERE ShowId = ' + show.id + ')',
-              { type: models.sequelize.QueryTypes.SELECT }
+              {type: models.sequelize.QueryTypes.SELECT}
             )
             .then(function (result) {
               if (result[0].season !== null && result[0].episode !== null) {
                 show.nextep = 'S' + result[0].season + 'E' + result[0].episode;
               }
               if (result.date !== null) {
-                show.nextairdate = new Date(result[0].date).toISOString().substring(0, 10);
+                show.nextairdate = new Date(result[0].date).toISOString()
+                  .substring(0, 10);
               }
               show.tosee = result[0].nbEp;
               resolve(show);
@@ -178,16 +179,19 @@ router.get('/today',
           today.format('YYYY-MM-DD 00:00:00') +
           '" AND us.ShowId = s.id AND us.UserId = ' + req.user.id + ' AND ' +
           'g.id = sg.GenreId AND sg.ShowId = s.id',
-        { type: models.sequelize.QueryTypes.SELECT }
+        {type: models.sequelize.QueryTypes.SELECT}
       )
       .then(function (shows) {
         if (shows === null) {
           res.status(404).send('No show diffused today.');
         }
-      
-        var nextEp, nextDate, finalShows = {}, i = 0;
-        for (i = 0; i < shows.length; i = i + 1) {
-          if (false === finalShows.hasOwnProperty(shows[i].slug)) {
+
+        var nextEp;
+        var nextDate;
+        var finalShows = {};
+        var i = 0;
+        for (i = 0; i < shows.length; i++) {
+          if (finalShows.hasOwnProperty(shows[i].slug) === false) {
             nextEp = null;
             if (shows[i].season !== null && shows[i].episode !== null) {
               nextEp = 'S' + shows[i].season + 'E' + shows[i].episode;
@@ -248,12 +252,15 @@ router.get('/',
           'ON s.id = e.ShowId WHERE g.id = sg.GenreId ' +
           'AND sg.ShowId = s.id AND s.id = us.ShowId ' +
           'AND us.UserId = ' + req.user.id,
-        { type: models.sequelize.QueryTypes.SELECT }
+        {type: models.sequelize.QueryTypes.SELECT}
       )
       .then(function (shows) {
-        var nextEp, nextDate, finalShows = {}, i = 0;
-        for (i = 0; i < shows.length; i = i + 1) {
-          if (false === finalShows.hasOwnProperty(shows[i].slug)) {
+        var nextEp;
+        var nextDate;
+        var finalShows = {};
+        var i = 0;
+        for (i = 0; i < shows.length; i++) {
+          if (finalShows.hasOwnProperty(shows[i].slug) === false) {
             nextEp = null;
             if (shows[i].season !== null && shows[i].episode !== null) {
               nextEp = 'S' + shows[i].season + 'E' + shows[i].episode;
@@ -306,14 +313,13 @@ router.get('/info/:slug',
           'ON ue.ShowId = e.ShowId AND e.season = ue.season ' +
           'AND e.episode = ue.episode AND ue.UserId = :user ' +
           'WHERE s.id = e.ShowId AND s.slug = :slug ' +
-          'ORDER BY e.season DESC, e.episode DESC',
-        {
-          replacements: {
-            user: req.user.id,
-            slug: req.params.slug
-          },
-          type: models.sequelize.QueryTypes.SELECT
-        }
+          'ORDER BY e.season DESC, e.episode DESC', {
+            replacements: {
+              user: req.user.id,
+              slug: req.params.slug
+            },
+            type: models.sequelize.QueryTypes.SELECT
+          }
       )
       .then(function (episodes) {
         /* Transforms for return */
@@ -324,7 +330,7 @@ router.get('/info/:slug',
         };
         var seasonCurrent = null;
         var i = 0;
-        for (i; i < episodes.length; i = i + 1) {
+        for (i; i < episodes.length; i++) {
           if (i === 0) {
             show = {
               id: episodes[i].id,
@@ -347,11 +353,11 @@ router.get('/info/:slug',
             num: episodes[i].episode,
             title: episodes[i].title,
             date: episodes[i].date,
-            view: (episodes[i].view == 1 ? true : false)
+            view: episodes[i].view == 1
           });
         }
         show.seasons.push(season);
-      
+
         res.json(show);
       })
       .catch(function (err) {
@@ -366,7 +372,7 @@ router.put('/episode/:showId',
     'use strict';
     var showId = req.params.showId;
     var episode = req.body.episode;
-  
+
     /**
      * Function for set to watched an episode
      *
@@ -378,16 +384,15 @@ router.put('/episode/:showId',
         .query(
           'INSERT INTO UserEpisodes ' +
             '(UserId, ShowId, season, episode, view) ' +
-            'VALUES (:userId, :showId, :season, :episode, 1)',
-          {
-            replacements: {
-              userId: req.user.id,
-              showId: showId,
-              season: season,
-              episode: episode
-            },
-            type: models.sequelize.QueryTypes.INSERT
-          }
+            'VALUES (:userId, :showId, :season, :episode, 1)', {
+              replacements: {
+                userId: req.user.id,
+                showId: showId,
+                season: season,
+                episode: episode
+              },
+              type: models.sequelize.QueryTypes.INSERT
+            }
         )
         .then(function () {
           res.json({
@@ -400,7 +405,7 @@ router.put('/episode/:showId',
           res.status(500).send('Error to set at watched the episode.');
         });
     };
-  
+
     /* If the episode argument is 'next' get the next episode and set it to watch */
     if (episode === 'next') {
       models.sequelize
@@ -415,14 +420,13 @@ router.put('/episode/:showId',
                 'AND e.episode = ue.episode ' +
                 'AND ue.UserId = :userId) ' +
             'AND e.ShowId = :showId ' +
-            'ORDER BY e.date ASC',
-          {
-            replacements: {
-              userId: req.user.id,
-              showId: showId
-            },
-            type: models.sequelize.QueryTypes.SELECT
-          }
+            'ORDER BY e.date ASC', {
+              replacements: {
+                userId: req.user.id,
+                showId: showId
+              },
+              type: models.sequelize.QueryTypes.SELECT
+            }
         )
         .then(function (episodes) {
           var episodeInfo;
@@ -445,8 +449,8 @@ router.put('/episode/:showId',
         res.status(400).send('Bad argument for set a episode to watch');
         return;
       }
-      seasonNum = parseInt(episodeInfo[0]);
-      episodeNum = parseInt(episodeInfo[1]);
+      seasonNum = parseInt(episodeInfo[0], 10);
+      episodeNum = parseInt(episodeInfo[1], 10);
       if (isNaN(seasonNum) || isNaN(episodeNum)) {
         res.status(400).send('Bad argument for set a episode to watch');
         return;
@@ -461,7 +465,7 @@ router.delete('/episode/:showId/:episode',
     'use strict';
     var showId = req.params.showId;
     var episode = req.params.episode;
-  
+
     /* Parse the episode string (S00E00) for get season and episode number */
     var episodeInfo = episode.substr(1).split('E');
     var seasonNum;
@@ -470,31 +474,30 @@ router.delete('/episode/:showId/:episode',
       res.status(400).send('Bad argument for set a episode to watch');
       return;
     }
-    seasonNum = parseInt(episodeInfo[0]);
-    episodeNum = parseInt(episodeInfo[1]);
+    seasonNum = parseInt(episodeInfo[0], 10);
+    episodeNum = parseInt(episodeInfo[1], 10);
     if (isNaN(seasonNum) || isNaN(episodeNum)) {
       res.status(400).send('Bad argument for set a episode to watch');
       return;
     }
-  
+
     models.sequelize
       .query(
         'DELETE FROM UserEpisodes WHERE UserId = :userId AND ShowId = :showId ' +
-          'AND season = :season AND episode = :episode',
-        {
-          replacements: {
-            userId: req.user.id,
-            showId: showId,
-            season: seasonNum,
-            episode: episodeNum
-          },
-          type: models.sequelize.QueryTypes.DELETE
-        }
+          'AND season = :season AND episode = :episode', {
+            replacements: {
+              userId: req.user.id,
+              showId: showId,
+              season: seasonNum,
+              episode: episodeNum
+            },
+            type: models.sequelize.QueryTypes.DELETE
+          }
       )
       .then(function () {
         res.json('Ok');
       })
-      .catch(function (err) {
+      .catch(function () {
         res.status(500).send('Error to set at unwatched the episode.');
       });
   });

@@ -1,4 +1,3 @@
-/*jslint node: true*/
 var express = require('express');
 var moment = require('moment');
 var jwt = require('jwt-simple');
@@ -10,9 +9,9 @@ var router = express.Router();
 
 /**
  * Create a JWT Token
- * 
+ *
  * @param {User} user The user to get a token
- * @return {String}
+ * @return {String} - The JWT
  */
 function createToken(user) {
   'use strict';
@@ -38,10 +37,10 @@ router.post(
   function (req, res) {
     'use strict';
     models.User
-      .find({ where: { email: req.body.email }})
+      .find({where: {email: req.body.email}})
       .then(function (user) {
         if (user !== null) {
-          return res.status(409).send({ message: 'Email is already taken.'});
+          return res.status(409).send({message: 'Email is already taken.'});
         }
         models.User
           .create({
@@ -65,29 +64,29 @@ router.post(
                   if (err) {
                     console.error(err);
                   }
-                  return res.send({ token: createToken(user) });  
+                  return res.send({token: createToken(user)});
                 });
-                return res.send({ token: createToken(user) });  
+                return res.send({token: createToken(user)});
               })
               .catch(function (err) {
                 console.error(err);
                 return res
                   .status(409)
-                  .send({ message: 'Problem when create your account.' });
+                  .send({message: 'Problem when create your account.'});
               });
           })
           .catch(function (err) {
             console.error(err);
             return res
               .status(409)
-              .send({ message: 'Problem when create your account.' });
+              .send({message: 'Problem when create your account.'});
           });
       })
       .catch(function (err) {
         console.error(err);
         return res
           .status(409)
-          .send({ message: 'Problem when create your account.' });
+          .send({message: 'Problem when create your account.'});
       });
   }
 );
@@ -100,29 +99,29 @@ router.post(
   function (req, res) {
     'use strict';
     models.User
-      .find({ where: { email: req.body.email } })
+      .find({where: {email: req.body.email}})
       .then(function (user) {
         if (user === null) {
           return res
             .status(401)
-            .send({ message: 'Wrong email and/or password.' });
+            .send({message: 'Wrong email and/or password.'});
         }
-        if (false === user.verifyPassword(req.body.password)) {
+        if (user.verifyPassword(req.body.password) === false) {
           return res
             .status(401)
-            .send({ message: 'Wrong email and/or password.' });
+            .send({message: 'Wrong email and/or password.'});
         }
-        if (false === user.is_activated) {
+        if (user.is_activated === false) {
           return res
             .status(403)
-            .send({ message: 'This user is not activated.'});
+            .send({message: 'This user is not activated.'});
         }
-        return res.send({ token: createToken(user) });
+        return res.send({token: createToken(user)});
       }).catch(function (err) {
         console.error(err);
         return res
           .status(401)
-          .send({ message: 'Wrong email and/or password.' });
+          .send({message: 'Wrong email and/or password.'});
       });
   }
 );
@@ -144,72 +143,71 @@ router.put(
           console.error('User not in database.');
           return res
             .status(409)
-            .send({ message: 'Error to subcribe to the TVShow.'});
-        } else {
-          models.Show
-            .findById(showid)
-            .then(function (show) {
-              if (show === null) {
-                tvshow.add(showid)
-                  .then(function (show) {
-                    tvshow.update(showid)
-                      .then(function () {
-                        user.addShow(show)
-                          .then(function () {
-                            return res
-                              .send({
-                                message: 'Success to subcribe to the TVShow.'
-                              });
-                          })
-                          .catch(function (err) {
-                            console.error(err);
-                            return res
-                              .status(409)
-                              .send({
-                                message: 'Error to subcribe to the TVShow.'
-                              });
-                          });
-                      })
-                      .catch(function (err) {
-                        console.error(err);
-                        return res
-                          .status(409)
-                          .send({ message: 'Error to subcribe to the TVShow.'});
-                      });
-                  })
-                  .catch(function (err) {
-                    console.error(err);
-                    return res
-                      .status(409)
-                      .send({ message: 'Error to subcribe to the TVShow.'});
-                  });
-              } else {
-                user.addShow(show)
-                  .then(function () {
-                    return res
-                      .send({ message: 'Success to subcribe to the TVShow.'});
-                  })
-                  .catch(function (err) {
-                    console.error(err);
-                    return res
-                      .status(409)
-                      .send({ message: 'Error to subcribe to the TVShow.'});
-                  });
-              }
-            })
-            .catch(function (err) {
-              console.error(err);
-              return res
-                .status(409)
-                .send({ message: 'Error to subcribe to the TVShow.'});
-            });
+            .send({message: 'Error to subcribe to the TVShow.'});
         }
+        models.Show
+          .findById(showid)
+          .then(function (show) {
+            if (show === null) {
+              tvshow.add(showid)
+                .then(function (show) {
+                  tvshow.update(showid)
+                    .then(function () {
+                      user.addShow(show)
+                        .then(function () {
+                          return res
+                            .send({
+                              message: 'Success to subcribe to the TVShow.'
+                            });
+                        })
+                        .catch(function (err) {
+                          console.error(err);
+                          return res
+                            .status(409)
+                            .send({
+                              message: 'Error to subcribe to the TVShow.'
+                            });
+                        });
+                    })
+                    .catch(function (err) {
+                      console.error(err);
+                      return res
+                        .status(409)
+                        .send({message: 'Error to subcribe to the TVShow.'});
+                    });
+                })
+                .catch(function (err) {
+                  console.error(err);
+                  return res
+                    .status(409)
+                    .send({message: 'Error to subcribe to the TVShow.'});
+                });
+            } else {
+              user.addShow(show)
+                .then(function () {
+                  return res
+                    .send({message: 'Success to subcribe to the TVShow.'});
+                })
+                .catch(function (err) {
+                  console.error(err);
+                  return res
+                    .status(409)
+                    .send({message: 'Error to subcribe to the TVShow.'});
+                });
+            }
+          })
+          .catch(function (err) {
+            console.error(err);
+            return res
+              .status(409)
+              .send({message: 'Error to subcribe to the TVShow.'});
+          });
       })
       .catch(function (err) {
         console.error(err);
         return res
           .status(409)
-          .send({ message: 'Error to subcribe to the TVShow.'});
+          .send({message: 'Error to subcribe to the TVShow.'});
       });
   }
 );
@@ -230,63 +228,59 @@ router.delete(
           console.error('User not in database.');
           return res
             .status(409)
-            .send({ message: 'Error to subcribe to the TVShow.'});
-        } else {
-          models.Show.findById(showid)
-            .then(function (show) {
-              if (show === null) {
-                console.error('Show not in database.');
-                return res
-                  .status(409)
-                  .send({ message: 'Error to subcribe to the TVShow.'});
-              } else {
-                user.removeShow(show)
+            .send({message: 'Error to subcribe to the TVShow.'});
+        }
+        models.Show.findById(showid)
+          .then(function (show) {
+            if (show === null) {
+              console.error('Show not in database.');
+              return res
+                .status(409)
+                .send({message: 'Error to subcribe to the TVShow.'});
+            }
+            user.removeShow(show)
+              .then(function () {
+                models.UserEpisode
+                  .destroy({
+                    where: {
+                      UserId: userid,
+                      ShowId: showid
+                    }
+                  })
                   .then(function () {
-                    models.UserEpisode
-                      .destroy(
-                        {
-                          where: {
-                            UserId: userid,
-                            ShowId: showid
-                          }
-                        }
-                      )
-                      .then(function () {
-                        return res
-                          .send({
-                            message: 'Success to unsubcribe to the TVShow.'
-                          });
-                      })
-                      .catch(function (err) {
-                        console.error(err);
-                        return res
-                          .status(409)
-                          .send({
-                            message: 'Error to unsubcribe to the TVShow.'
-                          });
+                    return res
+                      .send({
+                        message: 'Success to unsubcribe to the TVShow.'
                       });
                   })
                   .catch(function (err) {
                     console.error(err);
                     return res
                       .status(409)
-                      .send({ message: 'Error to unsubcribe to the TVShow.'});
+                      .send({
+                        message: 'Error to unsubcribe to the TVShow.'
+                      });
                   });
-              }
-            })
-            .catch(function (err) {
-              console.error(err);
-              return res
-                .status(409)
-                .send({ message: 'Error to unsubcribe to the TVShow.'});
-            });
-        }
+              })
+              .catch(function (err) {
+                console.error(err);
+                return res
+                  .status(409)
+                  .send({message: 'Error to unsubcribe to the TVShow.'});
+              });
+          })
+          .catch(function (err) {
+            console.error(err);
+            return res
+              .status(409)
+              .send({message: 'Error to unsubcribe to the TVShow.'});
+          });
       })
       .catch(function (err) {
         console.error(err);
         return res
           .status(409)
-          .send({ message: 'Error to unsubcribe to the TVShow.'});
+          .send({message: 'Error to unsubcribe to the TVShow.'});
       });
   }
 );
@@ -314,7 +308,7 @@ router.patch(
       })
       .catch(function (err) {
         console.error(err);
-        return res.status(409).send({ message: 'Error to save your profile.'});
+        return res.status(409).send({message: 'Error to save your profile.'});
       });
   }
 );
@@ -346,14 +340,14 @@ router.get(
       },
       genres: []
     };
-    
+
     /* Get number episode views on number episode subcribe */
     jobs.push(new Promise(function (resolve, reject) {
       models.sequelize
         .query(
           'SELECT COUNT(*) as nbEp FROM UserEpisodes ' +
             'WHERE view = 1 AND UserId = ' + userid,
-          { type: models.sequelize.QueryTypes.SELECT }
+          {type: models.sequelize.QueryTypes.SELECT}
         )
         .then(function (countEpisode) {
           returnValues.episodes.watched = countEpisode[0].nbEp;
@@ -363,14 +357,14 @@ router.get(
           reject(err);
         });
     }));
-    
+
     /* Get total episodes subcribe by user */
     jobs.push(new Promise(function (resolve, reject) {
       models.sequelize
         .query(
           'SELECT COUNT(e.ShowId) as nbEp FROM Episodes e, UserShow us ' +
             'WHERE e.ShowId = us.ShowId AND us.UserId = ' + userid,
-          { type: models.sequelize.QueryTypes.SELECT }
+          {type: models.sequelize.QueryTypes.SELECT}
         )
         .then(function (countEpisode) {
           returnValues.episodes.total = countEpisode[0].nbEp;
@@ -380,7 +374,7 @@ router.get(
           reject(err);
         });
     }));
-    
+
     /* Get ended or uptodate show */
     jobs.push(new Promise(function (resolve, reject) {
       models.sequelize
@@ -392,11 +386,11 @@ router.get(
               'WHERE ue.ShowId = us.ShowId) as watchedEp ' +
             'FROM Shows s,  UserShow us ' +
             'WHERE s.id = us.ShowId AND us.UserId = ' + userid,
-          { type: models.sequelize.QueryTypes.SELECT }
+          {type: models.sequelize.QueryTypes.SELECT}
         )
         .then(function (shows) {
           var i = 0;
-          for (i; i < shows.length; i = i + 1) {
+          for (i; i < shows.length; i++) {
             if (shows[i].ended) {
               if (shows[i].totalEp === shows[i].watchedEp) {
                 returnValues.statusShows.ended.uptodate++;
@@ -417,20 +411,20 @@ router.get(
           reject(err);
         });
     }));
-    
+
     /* Get count by genre */
     jobs.push(new Promise(function (resolve, reject) {
       models.sequelize
         .query(
           'SELECT COUNT(gs.GenreId) as nbShow, g.name ' +
             'FROM Genres g, ShowGenre gs, UserShow us ' +
-            'WHERE g.id = gs.GenreId AND gs.ShowId = us.ShowId AND us.UserId = ' +
-            userid + ' GROUP BY g.name',
-          { type: models.sequelize.QueryTypes.SELECT }
+            'WHERE g.id = gs.GenreId AND gs.ShowId = us.ShowId ' +
+            ' AND us.UserId = ' + userid + ' GROUP BY g.name',
+          {type: models.sequelize.QueryTypes.SELECT}
         )
         .then(function (genres) {
           var i = 0;
-          for (i; i < genres.length; i = i + 1) {
+          for (i; i < genres.length; i++) {
             returnValues.genres.push({
               name: genres[i].name,
               nb: genres[i].nbShow
@@ -442,7 +436,7 @@ router.get(
           reject(err);
         });
     }));
-    
+
     Promise.all(jobs)
       .then(function () {
         res.json(returnValues);
@@ -465,13 +459,11 @@ router.get(
     'use strict';
     var token = req.query.token;
     models.User
-      .findOne(
-        {
-          where: {
-            token: token
-          }
+      .findOne({
+        where: {
+          token: token
         }
-      )
+      })
       .then(function (user) {
         if (user === null) {
           return res.status(404).send({message: 'No user to validate.'});
