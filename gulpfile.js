@@ -1,6 +1,5 @@
-/*jslint node: true*/
 var gulp = require('gulp');
-var jshint = require('gulp-jshint');
+var eslint = require('gulp-eslint');
 var jsinspect = require('gulp-jsinspect');
 
 gulp.task('lint', function () {
@@ -13,9 +12,9 @@ gulp.task('lint', function () {
       './lib/**/*.js'
     ]
   )
-    .pipe(jshint())
-    .pipe(jshint.reporter('jshint-stylish'))
-    .pipe(jshint.reporter('fail'));
+    .pipe(eslint())
+    .pipe(eslint.format())
+    .pipe(eslint.failAfterError());
 });
 
 gulp.task('inspect', function () {
@@ -29,8 +28,8 @@ gulp.task('inspect', function () {
     ]
   )
     .pipe(jsinspect({
-      'threshold': 10,
-      'identifiers': true,
-      'suppress': 0
+      threshold: 10,
+      identifiers: true,
+      suppress: 0
     }));
 });
